@@ -39,18 +39,17 @@ export const queryModel = (
         .actions((self) => {
           const loader = flow(function* (...args) {
             try {
-              self.updateLoading(true);
+              self.updateStatus("loading");
               const response = yield fetch(...args);
               const data = getData(response);
 
               updateModel(self.data, data);
 
-              self.updateLoaded(true);
+              self.updateStatus("success");
             } catch (error) {
+              self.updateStatus("error");
               onError(error);
               return error;
-            } finally {
-              self.updateLoading(false);
             }
           });
 

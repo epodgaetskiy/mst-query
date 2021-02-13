@@ -13,12 +13,9 @@ const App = observer(() => {
     return <div>...loading</div>;
   }
 
-  if (store.users.isLoaded) {
-    return store.users.data.map((user, index) => (
-      <div key={index}>{user.email}</div>
-    ));
-  }
-  return <div>MST query</div>;
+  return store.users.data.map((user, index) => (
+    <div key={index}>{user.email}</div>
+  ));
 });
 
 export default App;
