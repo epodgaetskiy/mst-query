@@ -1,25 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect } from "react";
+import { observer } from "mobx-react-lite";
+import { useStore } from "./users/users.store";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const App = observer(() => {
+  const store = useStore();
+
+  useEffect(() => {
+    store.users.fetch();
+  }, [store.users]);
+
+  if (store.users.isLoading) {
+    return <div>...loading</div>;
+  }
+
+  if (store.users.isLoaded) {
+    return store.users.data.map((user, index) => (
+      <div key={index}>{user.email}</div>
+    ));
+  }
+  return <div>MST query</div>;
+});
 
 export default App;
