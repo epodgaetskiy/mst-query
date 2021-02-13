@@ -3,7 +3,7 @@ import { useContext, createContext } from "react";
 import { queryModel } from "../mst-query";
 import { usersService } from "./users.service";
 
-const UserSchema = types.model({
+const UserSchema = types.model("UserSchema", {
   email: types.maybeNull(types.string),
 });
 
@@ -18,7 +18,7 @@ const UsersStore = types.model({
 
 const usersStore = UsersStore.create();
 
-const UsersStoreContext = createContext(usersStore);
+const UsersStoreContext = createContext(null);
 
 export const UsersProvider = ({ children }) => (
   <UsersStoreContext.Provider value={usersStore}>

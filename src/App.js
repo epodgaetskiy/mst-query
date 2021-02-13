@@ -7,7 +7,7 @@ const App = observer(() => {
 
   useEffect(() => {
     store.users.fetch();
-  }, [store.users]);
+  }, [store]);
 
   if (store.users.isLoading) {
     return <div>...loading</div>;

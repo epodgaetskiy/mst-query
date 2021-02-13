@@ -1,27 +1,36 @@
-import {
-  types,
-  applySnapshot,
-  flow,
-  isLiteralType,
-  isFrozenType,
-} from "mobx-state-tree";
-import { NetworkStatus } from "./models/network";
+import { types, flow } from "mobx-state-tree";
+import { NetworkStatus } from "./models/network-status";
+import { updateModel } from "./models/operations";
 
-const updateModel = (model, data) => {
-  if (isLiteralType(model) || isFrozenType(model)) {
-    model = data;
+// network status as react-query
+// mutation
+// TS
+// abort
 
-    return;
-  }
-
-  applySnapshot(model, data);
-
-  return;
+const initialQueryParams = {
+  getData: (data) => data,
+  onError: () => {},
 };
 
-export const queryModel = (model, { fetch, getData }) => {
+const getQueryModelDisplayName = (model) => {
+  if (!model.name) {
+    return "QueryModel";
+  }
+
+  return `${model.name}_QueryModel`;
+};
+
+export const queryModel = (
+  model,
+  {
+    fetch,
+    getData = initialQueryParams.getData,
+    onError = initialQueryParams.onError,
+  }
+) => {
   return types.optional(
     types.compose(
+      getQueryModelDisplayName(model),
       NetworkStatus,
       types
         .model({
@@ -38,7 +47,7 @@ export const queryModel = (model, { fetch, getData }) => {
 
               self.updateLoaded(true);
             } catch (error) {
-              console.error(error);
+              onError(error);
               return error;
             } finally {
               self.updateLoading(false);
